@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            "respawn=catch_them_all.turtle_respawn_service:main"
         ],
     },
 )
