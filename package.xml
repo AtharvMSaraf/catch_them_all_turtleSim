@@ -7,6 +7,7 @@
   <maintainer email="atharvmakarandsaraf@gmail.com">atharvsaraf</maintainer>
   <license>TODO: License declaration</license>
 
+<<<<<<< HEAD
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
@@ -14,5 +15,14 @@
 
   <export>
     <build_type>ament_python</build_type>
+=======
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+>>>>>>> f2743656adffd84bc71f27183945bb803038e721
   </export>
 </package>
