@@ -3,6 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from turtlesim.srv import Spawn
+import random
 
 class respawnNode(Node):
 
@@ -19,8 +20,10 @@ class respawnNode(Node):
             self.get_logger().warning("Waiting for the add two int service ...")
 
         request = Spawn.Request() 
-        request.x = 2.0
-        request.y = 2.0
+        x = float(random.randint(0,10))
+        y = float(random.randint(0,10))
+        request.x = x
+        request.y = y
         request.name = "spawn2"
 
         future = self._client.call_async(request)
