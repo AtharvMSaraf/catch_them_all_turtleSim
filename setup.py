@@ -21,7 +21,8 @@ setup(
     entry_points={
         'console_scripts': [
             "respawn=catch_them_all.turtle_respawn_service:main",
-            "get_pose = catch_them_all.turtle_position_tracker:main"
+            "get_main_turtle_pose = catch_them_all.turtle_position_tracker:main"
+            "get_pose = catch_them_all.turtle_pose_service:main "
         ],
     },
 )
