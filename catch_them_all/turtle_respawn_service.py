@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 from turtlesim.srv import Spawn, Kill
 from turtlesim.msg import Pose
-
+from my_robot_interfaces.msg import TargetPositionCordinates
 
 import random
 
@@ -18,18 +18,22 @@ class respawnNode(Node):
         self._client = self.create_client(Spawn,"/spawn")
         self.kill_client = self.create_client(Kill,"/kill")
         
-        #initiate 3 spawn turtles
-        self.callback_spawn_client()
-        self.callback_spawn_client()
-        self.callback_spawn_client()
+        #initiating 3 initial spawn turtles
+        self.spawn_turtle_client_call()
+        self.spawn_turtle_client_call()
+        self.spawn_turtle_client_call()
         self.get_logger().info("Respawn client called")
 
-        # self.int_spawn_pose = self.create_spawn_pose_int_list(self.spawn_pose_dic)
+        #Publisher for the publishing the target
+        self.target_publisher = self.create_publisher(TargetPositionCordinates,"target_pose",10)
 
-        # getting the main turtle position
+        #clock for publishing the msg every 0.1 sec 
+        self.clk = self.create_timer(0.1,self.publish_target)
+
+        # subscribing to main turtle position
         self.sub = self.create_subscription(Pose,"/turtle1/pose",self.callback_pose_sub,10)
 
-    def callback_spawn_client(self):
+    def spawn_turtle_client_call(self):
         self.random_name = "spawn" + str(random.randint(0,100))
         while not self._client.wait_for_service():
             self.get_logger().warning("Waiting for the add two int service ...")
@@ -48,16 +52,19 @@ class respawnNode(Node):
 
     def callback_respawn_service_done(self,future):
         response = future.result()
-        self.get_logger().info(str(response.name))
         self.get_logger().info(str(response)+" has been spawned")
+
+
+    def publish_target(self):
+        msg = TargetPositionCordinates()
+        msg.target_pose = list(self.spawn_pose_dic.values())[0]
+        self.target_publisher.publish(msg)
 
     def callback_pose_sub(self,pose):
         # ***
         # function decides whether to kill a spawn or not
         # ***
 
-        
-        # self.get_logger().info("current position = " + str(pose.x) + " , " + str(pose.y))
         main_turtle_pose_array = [int(pose.x), int(pose.y)]
         # self.get_logger().info(str(main_turtle_pose_array))
 
@@ -70,16 +77,8 @@ class respawnNode(Node):
                     break
             del self.spawn_pose_dic[kill_turtle_key]
             self.kill_spwan_client_call(kill_turtle_key)
+            self.spawn_turtle_client_call()
             
-            
-            
-
-    # def create_spawn_pose_int_list(self,poselist):
-    #     int_list = []
-    #     for x,y in poselist.values():
-    #         int_list.append([int(x), int(y)])
-
-        # return int_list
     
     def kill_spwan_client_call(self,name):
 
