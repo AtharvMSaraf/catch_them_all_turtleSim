@@ -28,7 +28,7 @@ class respawnNode(Node):
         self.target_publisher = self.create_publisher(TargetPositionCordinates,"target_pose",10)
 
         #clock for publishing the msg every 0.1 sec 
-        self.clk = self.create_timer(0.1,self.publish_target)
+        self.clk = self.create_timer(0.011,self.publish_target)
 
         # subscribing to main turtle position
         self.sub = self.create_subscription(Pose,"/turtle1/pose",self.callback_pose_sub,10)
